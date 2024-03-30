@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Viewer</title>
+    <style>
+            /* body{
+                background-color: rgb(166, 166, 166); 
+            }  */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        h1{
+            text-align: center;
+        }
+        #main1{
+            text-align: center;
+            padding-top: 20px;
+        }
+            #main2{
+            text-align: center;
+            padding-top: 30px;
+            padding-right: 84px;
+        }
+        
+        #output {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        img {
+            margin: 10px;
+            padding: 5px;
+            max-width: 200px;
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>WEB SCRAPPING</h1>
+<div id="main1">
+    
+    <label for="searchInput">Search:</label>
+    <input type="text" id="searchInput">
+    <button onclick="search()">Search CSV</button>
+    <button onclick="fetchJson()">Fetch JSON</button>
+</div> 
+<div id="main2">
+    <label for="searchInput1">Search:</label>
+    <input type="text" id="searchInput1">
+    <button onclick="fetchImages()">Fetch Images</button>
+</div>
+    <div id="output"></div>
+
+    <script>
+        function search() {
+            // Get the search term
+            var searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+
+            // Check if the search term is empty
+            if (searchTerm === "") {
+                alert("Please enter a name.");
+                return;
+            }
+
+            // Check if the search term is 'yahoo'
+            if (searchTerm === 'yahoo') {
+                // Read and display CSV file
+                fetch('table_data.csv') // Replace 'yourfile.csv' with the actual filename
+                    .then(response => response.text())
+                    .then(data => {
+                        // Split CSV into rows
+                        var rows = data.split('\n');
+                        
+                        // Create a table for displaying the data
+                        var table = '<table>';
+
+                        // Display only the data from the 3rd to 102nd line in the table
+                        for (var i = 2; i < Math.min(rows.length, 102); i++) {
+                            var cells = rows[i].split(',');
+                            table += '<tr>';
+                            for (var j = 0; j < cells.length; j++) {
+                                table += '<td>' + cells[j] + '</td>';
+                            }
+                            table += '</tr>';
+                        }
+
+                        // Close the table tag
+                        table += '</table>';
+                        
+                        // Display the result
+                        document.getElementById("output").innerHTML = table || "No matching data found.";
+                    })
+                    .catch(error => console.error('Error reading CSV file:', error));
+            } else {
+                // Show an error message for invalid search terms
+                alert("Please enter a valid search term.");
+            }
+        }
+
+        function fetchJson() {
+            // Get the search term
+            var searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+
+            // Check if the search term is empty
+            if (searchTerm === "") {
+                alert("Please enter a search term.");
+                return;
+            }
+
+            // Check if the search term is 'yahoo'
+            if (searchTerm === 'yahoo') {
+                // Read and display JSON file
+                fetch('data.json') // Replace 'yourjsonfile.json' with the actual filename
+                    .then(response => response.json())
+                    .then(data => {
+                        // Convert JSON data to a string for display
+                        var jsonOutput = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                        
+                        // Display the result
+                        document.getElementById("output").innerHTML = jsonOutput || "No JSON data found.";
+                    })
+                    .catch(error => console.error('Error reading JSON file:', error));
+            } else {
+                // Show an error message for invalid search terms
+                alert("Please enter a valid search term.");
+            }
+        }
+//  fetch images
+        function fetchImages() {
+            var searchTerm = document.getElementById("searchInput1").value.trim().toLowerCase();
+            if (searchTerm === 'wikipedia' || searchTerm === 'wiki') {
+                // Assuming images are stored in a folder named "images"
+                var imageFolder = 'images/';
+                // List of image filenames
+                var imageList = ['img1.jpg', 'img2.jpg', 'img3.jpg','img4.jpg', 'img5.jpg', 'img6.jpg','img7.jpg', 'img8.jpg', 'img9.jpg','img10.jpg', 'img11.jpg', 'img12.jpg','img13.jpg', 'img14.jpg', 'img15.jpg','img16.jpg']; 
+                
+                // Update this with your actual image filenames
+
+                var imagesHTML = '';
+                // Loop through imageList and create img tags for each image
+                imageList.forEach(function(image) {
+                    imagesHTML += '<img src="' + imageFolder + image + '" alt="' + image + '">';
+                });
+
+                // Display the images in the output div
+                document.getElementById("output").innerHTML = imagesHTML;
+            } else {
+                alert("Please enter 'wikipedia' or 'wiki' to fetch images.");
+            }
+        }
+    </script>
+
+</body>
+</html>
